@@ -1,6 +1,7 @@
 import prisma from "@/libs/prisma";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import jwt from "jsonwebtoken";
 
 export const authOptions = {
   providers: [
@@ -15,19 +16,29 @@ export const authOptions = {
         //if valid password return null
         const isValidPassword = user.password === credentials.password;
         if (!isValidPassword) return null;
-
-        return { id: user.id, username: user.username, role: user.role };
+        const accessToken = jwt.sign(
+          { id: user.id, role: user.role },
+          process.env.NEXTAUTH_SECRET,
+          { expiresIn: "15d" }
+        );
+        // user.accessToken = accessToken;
+        return {
+          id: user.id,
+          username: user.username,
+          role: user.role,
+          accessToken: accessToken,
+        };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.username = user.username;
-        token.role = user.role;
-      }
-      return token;
+      //   if (user) {
+      //     token.id = user.id;
+      //     token.username = user.username;
+      //     token.role = user.role;
+      //   }
+      return { ...token, ...user };
     },
     async session({ session, token }) {
       if (token) {
@@ -37,7 +48,7 @@ export const authOptions = {
     },
   },
   jwt: {
-    secret: "super-secret",
+    secret: process.env.NEXTAUTH_SECRET,
     maxAge: 15 * 24 * 30 * 60, // 15 days
   },
   pages: {
