@@ -1,8 +1,30 @@
 import { RiVoiceprintFill } from "react-icons/ri";
 import Link from "next/link";
 import Head from "next/head";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import Router from "next/router";
 
 const login = () => {
+  const [fields, setFields] = useState({
+    username: "",
+    password: "",
+  });
+  function fieldHandler(e) {
+    e.preventDefault(e);
+    const name = e.target.getAttribute("name");
+    setFields({ ...fields, [name]: e.target.value });
+  }
+  async function submitHandler(e) {
+    e.preventDefault();
+    const res = await signIn("credentials", {
+      username: fields.username,
+      password: fields.password,
+      redirect: false,
+    });
+    console.log(res);
+  }
   return (
     <>
       <Head>
@@ -20,7 +42,7 @@ const login = () => {
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={submitHandler.bind(this)}>
             <div>
               <label
                 htmlFor="username"
@@ -30,6 +52,7 @@ const login = () => {
               </label>
               <div className="mt-2">
                 <input
+                  onChange={fieldHandler.bind(this)}
                   id="username"
                   name="username"
                   type="username"
@@ -50,6 +73,7 @@ const login = () => {
               </div>
               <div className="mt-2">
                 <input
+                  onChange={fieldHandler.bind(this)}
                   id="password"
                   name="password"
                   type="password"
@@ -60,14 +84,12 @@ const login = () => {
               </div>
             </div>
             <div>
-              <Link href={"/dashboard"}>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-                >
-                  Sign in
-                </button>
-              </Link>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
+              >
+                Sign in
+              </button>
             </div>
           </form>
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { RxDashboard, RxPerson } from "react-icons/rx";
 import { RiVoiceprintFill, RiLogoutBoxLine } from "react-icons/ri";
 import { CgShoppingBag } from "react-icons/cg";
@@ -38,11 +39,12 @@ const Sidebar = ({ children }) => {
             </div>
           </Link>
           <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
-          <Link href="/">
-            <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-              <RiLogoutBoxLine size={20} />
-            </div>
-          </Link>
+          <div
+            className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block"
+            onClick={() => signOut()}
+          >
+            <RiLogoutBoxLine size={20} />
+          </div>
         </div>
       </div>
       <main className="ml-20 w-full">

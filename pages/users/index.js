@@ -6,8 +6,15 @@ import Sidebar from "@/components/Sidebar.js";
 import Link from "next/link.js";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useSession, getSession } from "next-auth/react";
+import Router from "next/router";
 
 const users = () => {
+  const { data: session, status } = useSession();
+  // console.log(session?.user, status);
+  // if (status === "unauthenticated") {
+  //   Router.push("/");
+  // }
   const [users, setUsers] = useState([]);
   const [refreshToken, setRefreshToken] = useState(Math.random());
 
