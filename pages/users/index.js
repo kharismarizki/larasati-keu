@@ -4,9 +4,12 @@ import Sidebar from "@/components/Sidebar.js";
 import Link from "next/link.js";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useSession, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const users = () => {
+  const router = useRouter();
   const [users, setUsers] = useState([]);
 
   async function handlerDelete(id) {
@@ -33,19 +36,35 @@ const users = () => {
 
   async function fetchUsers() {
     try {
-      const token = await getSession();
-      if (!token) throw new Error(token);
+      const session = await getSession();
+      if (!session) throw new Error(session);
       const res = await axios.get("/api/users", {
-        headers: { Authorization: `Bearer ${token.user.accessToken}` },
+        headers: { Authorization: `Bearer ${session.user.accessToken}` },
       });
       setUsers(res.data);
     } catch (error) {
       console.log(error);
     }
   }
+  async function checkRole() {
+    try {
+      const session = await getSession();
+      if (!session) throw new Error(session);
+      if (session.user.role === "penyiar") {
+        toast.error("Unauthorized", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1000,
+        });
+        return router.replace("/dashboard");
+      }
+      fetchUsers();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
-    fetchUsers();
+    checkRole();
   }, []);
 
   return (

@@ -1,8 +1,7 @@
 import { RiVoiceprintFill } from "react-icons/ri";
-import Link from "next/link";
 import Head from "next/head";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getSession, signIn } from "next-auth/react";
 import Router from "next/router";
 
 const login = () => {
@@ -24,6 +23,15 @@ const login = () => {
     });
     console.log(res);
   }
+
+  async function checkSession() {
+    const session = await getSession();
+    if (session) return Router.push("/dashboard");
+    return;
+  }
+  useEffect(() => {
+    checkSession();
+  }, []);
   return (
     <>
       <Head>

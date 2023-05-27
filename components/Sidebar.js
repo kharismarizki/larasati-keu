@@ -70,7 +70,7 @@ const Sidebar = ({ children }) => {
         </div>
       </div>
       <main className="ml-20 w-full">
-        <Header />
+        <Header user={session.user.username} />
         {children}
       </main>
     </div>
