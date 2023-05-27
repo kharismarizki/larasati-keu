@@ -1,7 +1,6 @@
 import { RiVoiceprintFill } from "react-icons/ri";
 import Link from "next/link";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Router from "next/router";
@@ -21,7 +20,7 @@ const login = () => {
     const res = await signIn("credentials", {
       username: fields.username,
       password: fields.password,
-      redirect: false,
+      callbackUrl: "/dashboard",
     });
     console.log(res);
   }

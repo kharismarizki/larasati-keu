@@ -1,14 +1,11 @@
 import Sidebar from "@/components/Sidebar";
 import FormUser from "@/components/form/FormUser";
 import axios from "axios";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export async function getServerSideProps(ctx) {
   const { data } = await axios.get(
     "http://localhost:3000/api/users/" + ctx.query.id
   );
-
   return { props: { data } };
 }
 
