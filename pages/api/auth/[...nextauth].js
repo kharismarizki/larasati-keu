@@ -2,6 +2,7 @@ import prisma from "@/libs/prisma";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
+import argon2 from "argon2";
 
 export const authOptions = {
   providers: [
@@ -14,7 +15,10 @@ export const authOptions = {
         });
         if (!user) return null;
         //if valid password return null
-        const isValidPassword = user.password === credentials.password;
+        const isValidPassword = argon2.verify(
+          user.password,
+          credentials.password
+        );
         if (!isValidPassword) return null;
         const accessToken = jwt.sign(
           { id: user.id, role: user.role },
@@ -33,11 +37,6 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      //   if (user) {
-      //     token.id = user.id;
-      //     token.username = user.username;
-      //     token.role = user.role;
-      //   }
       return { ...token, ...user };
     },
     async session({ session, token }) {
