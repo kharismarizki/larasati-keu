@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Router from "next/router";
+import { getSession } from "next-auth/react";
 
 export default function FormUser({ data }) {
   const [fields, setFields] = useState({
@@ -18,8 +19,11 @@ export default function FormUser({ data }) {
   }
   async function submitHandler(e) {
     e.preventDefault();
+    const { user } = await getSession();
     await axios
-      .post("/api/users", fields)
+      .post("/api/users", fields, {
+        headers: { Authorization: "Bearer " + user.accessToken },
+      })
       .then((res) => {
         toast.success(res.data.msg, {
           position: toast.POSITION.TOP_CENTER,
@@ -102,7 +106,6 @@ export default function FormUser({ data }) {
             placeholder=" "
             required
             onChange={fieldHandler.bind(this)}
-            defaultValue={data && data.password}
           />
           <label
             htmlFor="password"
