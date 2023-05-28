@@ -1,4 +1,5 @@
 import prisma from "@/libs/prisma";
+import argon2 from "argon2";
 
 export default async function handler(req, res) {
   const id = parseInt(req.query.id);
@@ -8,9 +9,10 @@ export default async function handler(req, res) {
   }
   if (req.method === "PUT") {
     const { name, username, password, role } = req.body;
+    const passwordHash = await argon2.hash(password);
     const user = await prisma.user.update({
       where: { id },
-      data: { name, username, password, role },
+      data: { name, username, password: passwordHash, role },
     });
     return res.status(200).json({ msg: "Data berhasil diupdate", data: user });
   }
