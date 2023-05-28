@@ -9,11 +9,6 @@ import Sidebar from "@/components/Sidebar.js";
 const orders = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* <div className="flex justify-between p-4">
-        <h2>Orders</h2>
-        <h2>Selamat Datang, Admin</h2>
-      </div> */}
-
       <div className="p-4">
         <Link href={"/orders/form"}>
           <button
