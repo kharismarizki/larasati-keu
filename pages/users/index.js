@@ -21,15 +21,10 @@ const users = () => {
       cancelButtonText: "Cancel",
       confirmButtonColor: "#0f172a",
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        const afterDel = users.filter((v) => v.id === id);
+        const afterDel = users.filter((v) => v.id !== id);
         setUsers(afterDel);
         axios.delete("/api/users/" + user.id);
-        Swal.fire({
-          title: "Data berhasil dihapus",
-          confirmButtonColor: "#0f172a",
-        });
       }
     });
   }
