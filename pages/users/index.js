@@ -7,9 +7,10 @@ import Swal from "sweetalert2";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import DataTable from "react-data-table-component";
+import { MdDelete, MdEdit } from "react-icons/md";
 
-const users = () => {
-  const router = useRouter();
+function TableUsers() {
   const [users, setUsers] = useState([]);
 
   async function handlerDelete(id) {
@@ -41,6 +42,59 @@ const users = () => {
       console.log(error);
     }
   }
+  const columns = [
+    {
+      name: "Name",
+      selector: (row) => row.name,
+    },
+    {
+      name: "Username",
+      selector: (row) => row.username,
+      hide: "sm",
+    },
+    {
+      name: "Role",
+      selector: (row) => row.role,
+      hide: "md",
+    },
+    {
+      name: "Action",
+      selector: (row) => {
+        return (
+          <div className="flex rounded-md shadow-sm" role="group">
+            <Link href={`/users/form/${row.id}`}>
+              <button
+                type="button"
+                className="w-fit px-2 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-l-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white"
+              >
+                <MdEdit />
+              </button>
+            </Link>
+            <button
+              type="button"
+              className="px-2 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-r-md hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white"
+              onClick={() => handlerDelete(row.id)}
+            >
+              <MdDelete />
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+  return (
+    <>
+      <DataTable columns={columns} data={users} pagination />
+    </>
+  );
+}
+
+export default function Users() {
+  const router = useRouter();
+
   async function checkRole() {
     try {
       const session = await getSession();
@@ -52,7 +106,6 @@ const users = () => {
         });
         return router.replace("/dashboard");
       }
-      fetchUsers();
     } catch (e) {
       console.log(e);
     }
@@ -74,61 +127,13 @@ const users = () => {
           </button>
         </Link>
         <div className="w-full m-auto p-4 border rounded-lg bg-white overflow-y-auto">
-          <div className="my-3 p-2 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 items-center justify-between cursor-pointer">
-            <span>Name</span>
-            <span className="sm:text-left text-right">Username</span>
-            <span className="hidden md:grid">Role</span>
-            <span className="hidden sm:grid">Action</span>
-          </div>
-          <ul>
-            {users.map((user, id) => (
-              <li
-                key={id}
-                className="bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 items-center justify-between cursor-pointer"
-              >
-                <div className="flex items-center">
-                  <div className="bg-purple-100 p-3 rounded-lg">
-                    <BsPersonFill className="text-slate-800" />
-                  </div>
-                  <p className="pl-4">{user.name}</p>
-                </div>
-                <p className="text-gray-600 sm:text-left text-right">
-                  {user.username}
-                </p>
-                <p className="hidden md:flex">{user.role}</p>
-                <div className="sm:flex hidden justify-between items-center">
-                  <div
-                    className="inline-flex rounded-md shadow-sm"
-                    role="group"
-                  >
-                    <Link href={"/users/form/" + user.id}>
-                      <button
-                        type="button"
-                        className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-l-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white"
-                      >
-                        Edit
-                      </button>
-                    </Link>
-                    <button
-                      type="button"
-                      className="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-r-md hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white"
-                      onClick={handlerDelete.bind(this, user.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <TableUsers />
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default users;
-
-users.getLayout = function getLayout(page) {
+Users.getLayout = function getLayout(page) {
   return <Sidebar>{page}</Sidebar>;
 };
