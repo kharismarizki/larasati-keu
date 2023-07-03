@@ -11,6 +11,7 @@ export default async function handler(req, res) {
             },
           },
         },
+        orderBy: { createdAt: "desc" },
       });
       return res.json(cust);
     }
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
           },
         },
       },
+      orderBy: { createdAt: "desc" },
       where: {
         idUser: parseInt(req.query.id),
       },
