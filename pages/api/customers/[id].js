@@ -18,6 +18,7 @@ export default async function handler(req, res) {
         quantity: parseInt(quantity),
         total: parseInt(total),
         idUser,
+        updateAt: new Date(),
       },
     });
     return res.status(200).json({ msg: "Data berhasil diupdate", data: cust });

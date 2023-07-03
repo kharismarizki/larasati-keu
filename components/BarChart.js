@@ -32,7 +32,7 @@ const BarChart = () => {
       datasets: [
         {
           label: "Jumlah pendapatan",
-          data: [123456, 321654, 432156, 234567, 333222, 111222, 567555],
+          data: [56000, 63000, 91000, 91000, 63000, 140000, 126000],
           borderColor: "rgb(53, 162, 235)",
           backgroundColor: "#64748b",
         },
@@ -45,7 +45,7 @@ const BarChart = () => {
         },
         title: {
           display: true,
-          text: "Pendapatan Harian",
+          text: "Pendapatan Minggu Ini",
         },
       },
       maintainAspectRatio: false,

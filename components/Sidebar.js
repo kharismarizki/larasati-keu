@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react";
 import { RxDashboard, RxPerson } from "react-icons/rx";
 import { RiVoiceprintFill, RiLogoutBoxLine } from "react-icons/ri";
 import { CgShoppingBag } from "react-icons/cg";
-import { FiSettings } from "react-icons/fi";
+import { TbReportMoney } from "react-icons/tb";
 import Header from "./Header";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -55,9 +55,9 @@ const Sidebar = ({ children }) => {
               <CgShoppingBag size={20} />
             </div>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/report">
             <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
-              <FiSettings size={20} />
+              <TbReportMoney size={20} />
             </div>
           </Link>
           <span className="border-b-[1px] border-gray-200 w-full p-2"></span>
