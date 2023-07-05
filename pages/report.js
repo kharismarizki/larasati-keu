@@ -1,13 +1,19 @@
 import Head from "next/head";
 import TopCards from "../components/TopCards";
-import BarChart from "../components/BarChart";
 import Sidebar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import axios from "axios";
+import IncomeTable from "@/components/table/IncomeTable";
+import OutcomeTable from "@/components/table/OutcomeTable";
+import SalaryTable from "@/components/table/SalaryTable";
+import FormIncome from "@/components/form/FormIncome";
+import FormOutcome from "@/components/form/FormOutcome";
+import FormSalary from "@/components/form/FormSalary";
 
 export default function Report() {
   const [rec, setRec] = useState([]);
+  const [type, setType] = useState("income");
   async function fetchCust() {
     try {
       const session = await getSession();
@@ -34,14 +40,30 @@ export default function Report() {
         {/* <Header /> */}
         <TopCards data={rec} />
         <div className="p-4 grid md:grid-cols-3 grid-cols-1 gap-4">
-          <div className="w-full md:col-span-1 col-span-3 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
-            tes
+          <div className="w-full md:col-span-2 col-span-3 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
+            <label
+              htmlFor="countries"
+              className="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Select an option
+            </label>
+            <select
+              defaultValue={type}
+              onChange={(e) => setType(e.target.value)}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 "
+            >
+              <option value="income">Pemasukan</option>
+              <option value="outcome">Pengeluaran</option>
+              <option value="salary">Gaji</option>
+            </select>
+            {type === "income" && <IncomeTable />}
+            {type === "outcome" && <OutcomeTable />}
+            {type === "salary" && <SalaryTable />}
           </div>
           <div className="w-full md:col-span-1 col-span-3 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
-            tes
-          </div>
-          <div className="w-full md:col-span-1 col-span-3 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
-            tes
+            {type === "income" && <FormIncome />}
+            {type === "outcome" && <FormOutcome />}
+            {type === "salary" && <FormSalary />}
           </div>
         </div>
       </main>
