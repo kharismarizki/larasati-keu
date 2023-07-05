@@ -19,6 +19,7 @@ model User {
   customer Customer[]
   income Income[]
   outcome Outcome[]
+  salary Salary[]
 }
 
 model Customer {
@@ -50,4 +51,14 @@ model Outcome{
   date DateTime @default(now())
   user User? @relation(fields: [idUser], references: [id])
   idUser Int?
+}
+
+model Salary{
+  id Int @id @default(autoincrement())
+  note String
+  total Int
+  date DateTime
+  user User? @relation(fields: [idUser], references: [id])
+  idUser Int?
+
 }
