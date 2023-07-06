@@ -14,6 +14,20 @@ export default async function handler(req, res) {
     });
     return res.json(salary);
   }
+  if (req.method === "GET" && req.query.role === "penyiar") {
+    const salary = await prisma.salary.findMany({
+      where: { idUser: parseInt(req.query.idUser) },
+      include: {
+        user: {
+          select: {
+            username: true,
+          },
+        },
+      },
+      orderBy: { date: "desc" },
+    });
+    return res.json(salary);
+  }
   if (req.method === "POST" && req.query.role === "admin") {
     const { note, total, date, idUser } = req.body;
     if (!note | !total | !date | !idUser)
@@ -31,8 +45,5 @@ export default async function handler(req, res) {
       .json({ msg: "Data berhasil dimasukan", data: salary });
   }
 
-  return res
-    .status(400)
-    .json({ msg: "Bad request / Method tidak diijinkan" })
-    .end();
+  return res.status(400).json({ msg: "Bad request / Method tidak diijinkan" });
 }
