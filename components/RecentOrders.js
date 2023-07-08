@@ -3,6 +3,12 @@ import moment from "moment/moment";
 import { FaShoppingBag } from "react-icons/fa";
 
 const RecentOrders = ({ data }) => {
+  const rupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "decimal",
+      // currency: "IDR",
+    }).format(number);
+  };
   return (
     <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white overflow-scroll">
       <h1>Pelanggan Terbaru</h1>
@@ -17,7 +23,7 @@ const RecentOrders = ({ data }) => {
             </div>
             <div className="pl-4">
               <p className="text-gray-800 font-bold">{value.name}</p>
-              <p className="text-gray-400 text-sm">Rp. {value.total}</p>
+              <p className="text-gray-400 text-sm">Rp. {rupiah(value.total)}</p>
             </div>
             <p className="lg:flex hidden absolute right-6 text-sm">
               {moment(value.createdAt).startOf("hour").fromNow()}

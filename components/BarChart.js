@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { getSession } from "next-auth/react";
+import axios from "axios";
+import moment from "moment";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,43 +23,51 @@ ChartJS.register(
 );
 
 const BarChart = () => {
-  const [chartData, setChartData] = useState({
-    datasets: [],
-  });
+  const [nilai, setNilai] = useState([]);
 
-  const [chartOptions, setChartOptions] = useState({});
+  async function fetchData() {
+    const session = await getSession();
+    const res = await axios.get("/api/others/chart", {
+      params: { role: session.user.role, id: session.user.id },
+    });
+
+    setNilai(res.data.data);
+  }
+
+  var datachart = {
+    labels: nilai?.map((item) => item.bulan),
+    datasets: [
+      {
+        label: "Jumlah pendapatan",
+        data: nilai?.map((item) => item.total),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "#64748b",
+      },
+    ],
+  };
+
+  var options = {
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Pendapatan Per Bulan",
+      },
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+  };
 
   useEffect(() => {
-    setChartData({
-      labels: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"],
-      datasets: [
-        {
-          label: "Jumlah pendapatan",
-          data: [56000, 63000, 91000, 91000, 63000, 140000, 126000],
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "#64748b",
-        },
-      ],
-    });
-    setChartOptions({
-      plugins: {
-        legend: {
-          position: "top",
-        },
-        title: {
-          display: true,
-          text: "Pendapatan Minggu Ini",
-        },
-      },
-      maintainAspectRatio: false,
-      responsive: true,
-    });
+    fetchData();
   }, []);
 
   return (
     <>
       <div className="w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
-        <Bar data={chartData} options={chartOptions} />
+        <Bar data={datachart} options={options} />
       </div>
     </>
   );

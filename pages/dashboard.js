@@ -25,6 +25,7 @@ export default function Dashboard() {
       console.log(error);
     }
   }
+
   useEffect(() => {
     fetchCust();
   }, []);
