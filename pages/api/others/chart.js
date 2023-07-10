@@ -3,32 +3,6 @@ import { elements } from "chart.js";
 import moment from "moment";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    // if (req.query.role === "admin") {
-    //   const cust = await prisma.customer.findMany({
-    //     select: {
-    //       total: true,
-    //       createdAt: true,
-    //     },
-    //   });
-    //   let incomeMonth = 0;
-    //   let incomeDay = 0;
-    //   let custMonth = cust.filter(
-    //     (v) => moment(v.createdAt).get("M") === moment(new Date()).get("M")
-    //   ).length;
-    //   cust
-    //     .filter(
-    //       (v) => moment(v.createdAt).get("M") === moment(new Date()).get("M")
-    //     )
-    //     .map((v) => (incomeMonth += v.total));
-    //   cust
-    //     .filter(
-    //       (v) => moment(v.createdAt).get("D") === moment(new Date()).get("D")
-    //     )
-    //     .map((v) => (incomeDay += v.total));
-
-    //   return res.json({ incomeMonth, custMonth, incomeDay });
-    // }
-
     var date = new Date(),
       y = date.getFullYear();
 
@@ -44,40 +18,19 @@ export default async function handler(req, res) {
     });
 
     let data = [];
-
     //return data chart
 
     bln.forEach((element) => {
-      for (let i = 0; i < cust.length; i++) {
-        data.push({
-          bulan: element,
-          total: cust[i].bulan == element ? cust[i].total : 0,
-        });
-      }
+      let hasil = cust.filter((v) => v.bulan == element);
+      data.push({
+        bulan: element,
+        total: hasil[0]?.total ? hasil[0]?.total : 0,
+      });
     });
-
     return res.status(200).json({
       data: data,
       message: "berhasil Mendapatkan data",
     });
-
-    // let incomeMonth = 0;
-    // let incomeDay = 0;
-    // let custMonth = cust.filter(
-    //   (v) => moment(v.createdAt).get("M") === moment(new Date()).get("M")
-    // ).length;
-    // cust
-    //   .filter(
-    //     (v) => moment(v.createdAt).get("M") === moment(new Date()).get("M")
-    //   )
-    //   .map((v) => (incomeMonth += v.total));
-    // cust
-    //   .filter(
-    //     (v) => moment(v.createdAt).get("D") === moment(new Date()).get("D")
-    //   )
-    //   .map((v) => (incomeDay += v.total));
-
-    // return res.json({ incomeMonth, custMonth, incomeDay });
   }
   return res.status(400).json({ msg: "Bad request / Method tidak diijinkan" });
 }
