@@ -22,7 +22,12 @@ const RecentOrders = ({ data }) => {
               <FaShoppingBag className="text-slate-800" />
             </div>
             <div className="pl-4">
-              <p className="text-gray-800 font-bold">{value.name}</p>
+              <p className="text-gray-800 font-bold">
+                {value.name}
+                <p className="text-gray-400 font-normal">
+                  ({value.user.username})
+                </p>
+              </p>
               <p className="text-gray-400 text-sm">Rp. {rupiah(value.total)}</p>
             </div>
             <p className="lg:flex hidden absolute right-6 text-sm">

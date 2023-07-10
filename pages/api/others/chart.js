@@ -11,6 +11,9 @@ export default async function handler(req, res) {
     var lastYear = new Date(y, 12, 0);
 
     //get all bulan
+    let bln = Array.apply(0, Array(12)).map(function (_, i) {
+      return moment().month(i).format("MMMM");
+    });
 
     let data = [];
     let cust;
@@ -21,19 +24,16 @@ export default async function handler(req, res) {
       cust =
         await prisma.$queryRaw`SELECT DATE_FORMAT(createdAt, "%M") as bulan, SUM(total) as total FROM customer WHERE createdAt >= ${firstYear} AND createdAt <= ${lastYear} AND idUser = ${req.query.id} GROUP BY 1 ORDER BY createdAt`;
     }
-    let bln = Array.apply(0, Array(12)).map(function (_, i) {
-      return moment().month(i).format("MMMM");
-    });
+
     //return data chart
 
     bln.forEach((element) => {
-      let hasil = cust.filter((v) => (v.bulan == element ? v.total : 0));
+      let hasil = cust.filter((v) => v.bulan == element);
       data.push({
         bulan: element,
-        total: hasil[0]?.total ? hasil[0].total : 0,
+        total: hasil[0]?.total ? hasil[0]?.total : 0,
       });
     });
-
     return res.status(200).json({
       data: data,
       message: "berhasil Mendapatkan data",
