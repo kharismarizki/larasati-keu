@@ -24,6 +24,14 @@ export default function Report() {
   useEffect(() => {
     fetchCust();
   }, []);
+
+  // format rupiah
+  const rupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "decimal",
+      // currency: "IDR",
+    }).format(number);
+  };
   return (
     <>
       <Head>
@@ -45,7 +53,9 @@ export default function Report() {
             <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900">
               Total Seluruh Gaji
             </h5>
-            <p className="my-2 font-medium italic text-lg">Rp. {allSal}</p>
+            <p className="my-2 font-medium italic text-lg">
+              Rp. {rupiah(allSal)}
+            </p>
             <p className="font-normal text-gray-700">
               Nominal diatas adalah total seluruh gaji yang anda dapatkan selama
               bekerja di Radio Larasati FM

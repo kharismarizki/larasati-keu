@@ -37,6 +37,14 @@ export default function SalaryTable() {
   useEffect(() => {
     fetch();
   }, []);
+
+  // format rupiah
+  const rupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "decimal",
+      // currency: "IDR",
+    }).format(number);
+  };
   const columns = [
     {
       name: "Nama Penyiar",
@@ -44,7 +52,7 @@ export default function SalaryTable() {
     },
     {
       name: "Total Gaji",
-      selector: (row) => row.total,
+      selector: (row) => "Rp. " + rupiah(row.total),
     },
     {
       name: "Bulan",

@@ -52,6 +52,7 @@ export default function FormSalary() {
           autoClose: 2000,
         })
       );
+    window.location.reload();
   }
 
   return (

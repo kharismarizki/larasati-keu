@@ -35,11 +35,11 @@ const BarChart = () => {
   }
 
   var datachart = {
-    labels: nilai?.map((item) => item.bulan),
+    labels: nilai.map((v) => v.bulan),
     datasets: [
       {
         label: "Jumlah pendapatan",
-        data: nilai?.map((item) => item.total),
+        data: nilai.map((v) => v.total),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "#64748b",
       },
